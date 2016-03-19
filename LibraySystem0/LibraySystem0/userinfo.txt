@@ -1,0 +1,7 @@
+ÓÃ»§ID ÃÜÂë Óà¶î 
+admin admin 0 
+user1 xxxxxx 300 
+user2 yyyyyy 200 
+user3 zzzzzz 1000 
+user4 xyzxyz 100 
+user5 xyzxyz 10000 
