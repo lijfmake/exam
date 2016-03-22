@@ -4,7 +4,7 @@ import com.huawei.exam.ReturnCodeEnum;
 import com.huawei.exam.ReturnCodeRst;
 
 /**
- * <p>Title: ±¾Àà¹©¿¼Éúµ÷ÓÃ£¬²»ÔÊĞí¸ü¸Ä</p>
+ * <p>Title: æœ¬ç±»ä¾›è€ƒç”Ÿè°ƒç”¨ï¼Œä¸å…è®¸æ›´æ”¹</p>
  *
  * <p>Description: </p>
  *
@@ -18,36 +18,36 @@ import com.huawei.exam.ReturnCodeRst;
 public abstract class OpResult {
 
     /**
-     * ´´½¨½á¹û£¬¸ø¿Í»§¶Ë·µ»Ø¼òµ¥½á¹ûĞÅÏ¢
-     * Èç£º
-     * E000:³õÊ¼»¯³É¹¦
-     * E010:¹ÒÊ§³É¹¦
+     * åˆ›å»ºç»“æœï¼Œç»™å®¢æˆ·ç«¯è¿”å›ç®€å•ç»“æœä¿¡æ¯
+     * å¦‚ï¼š
+     * E000:åˆå§‹åŒ–æˆåŠŸ
+     * E010:æŒ‚å¤±æˆåŠŸ
      *
-     * @param errCode ReturnCodeEnum£º·µ»ØÂëÃ¶¾Ù
+     * @param errCode ReturnCodeEnumï¼šè¿”å›ç æšä¸¾
      *
-     * @return OpResult£º·µ»Ø½á¹û¶ÔÏó
+     * @return OpResultï¼šè¿”å›ç»“æœå¯¹è±¡
      */
     public static OpResult createOpResult(ReturnCodeEnum errCode) {
         return new ReturnCodeRst(errCode);
     }
 
     /**
-     * ´´½¨½á¹û£¬¸ø¿Í»§¶Ë·µ»ØÓÃ»§²éÑ¯µÄ½á¹ûĞÅÏ¢
+     * åˆ›å»ºç»“æœï¼Œç»™å®¢æˆ·ç«¯è¿”å›ç”¨æˆ·æŸ¥è¯¢çš„ç»“æœä¿¡æ¯
      *
-     * @param user UserInfo£ºÓÃ»§ĞÅÏ¢½á¹¹
+     * @param user UserInfoï¼šç”¨æˆ·ä¿¡æ¯ç»“æ„
      *
-     * @return OpResult£º·µ»Ø½á¹û¶ÔÏó
+     * @return OpResultï¼šè¿”å›ç»“æœå¯¹è±¡
      */
     public static OpResult createOpResult(UserInfo user) {
         return new ReturnCodeRst(user);
     }
 
     /**
-     * ´´½¨½á¹û£¬¸ø¿Í»§¶Ë·µ»ØÍ¼Êé²éÑ¯µÄ½á¹ûĞÅÏ¢
+     * åˆ›å»ºç»“æœï¼Œç»™å®¢æˆ·ç«¯è¿”å›å›¾ä¹¦æŸ¥è¯¢çš„ç»“æœä¿¡æ¯
      *
-     * @param info TaskInfo£ºÍ¼ÊéĞÅÏ¢½á¹¹
+     * @param info TaskInfoï¼šå›¾ä¹¦ä¿¡æ¯ç»“æ„
      *
-     * @return OpResult£º·µ»Ø½á¹û¶ÔÏó
+     * @return OpResultï¼šè¿”å›ç»“æœå¯¹è±¡
      */
     public static OpResult createOpResult(BookInfo book) {
         return new ReturnCodeRst(book);

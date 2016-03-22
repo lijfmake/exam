@@ -3,7 +3,7 @@ package com.huawei.library;
 import com.huawei.exam.BookStatusEnum;
 
 /**
- * <p>Title: ¿¼Éú¿ÉÒÔ¸ù¾İ×Ô¼ºµÄĞèÇóÔÚ±¾ÀàÖĞÔö¼Ó·½·¨ºÍ±äÁ¿£¬µ«²»ÄÜĞŞ¸ÄÒÑÓĞ·½·¨Óë±äÁ¿ </p>
+ * <p>Title: è€ƒç”Ÿå¯ä»¥æ ¹æ®è‡ªå·±çš„éœ€æ±‚åœ¨æœ¬ç±»ä¸­å¢åŠ æ–¹æ³•å’Œå˜é‡ï¼Œä½†ä¸èƒ½ä¿®æ”¹å·²æœ‰æ–¹æ³•ä¸å˜é‡ </p>
  *
  * <p>Description: </p>
  *
@@ -15,13 +15,15 @@ import com.huawei.exam.BookStatusEnum;
  * @version 1.0
  */
 public class BookInfo {
-    private String bookName; //Í¼ÊéÃû³Æ
-    private int price; //Í¼Êé¼Û¸ñ
-    private BookStatusEnum status = BookStatusEnum.BOOK_IDLE; //Í¼Êé×´Ì¬,³õÊ¼Îª¿ÕÏĞ×´Ì¬
-    private String userName; //½èÊéÈË£¬µ±Í¼Êé×´Ì¬Îª¿ÕÏĞ/±¨·ÏÊ±£¬¸³ÖµÎª¿Õ×Ö·û´®
-    private int borrowDays; //±¾´Î±»Ô¤½èÌìÊı£¬µ±Í¼Êé×´Ì¬Îª¿ÕÏĞ/±¨·ÏÊ±,¸³ÖµÎª0
-    private int totalDays; //Í¼Êé±»½èÔÄÀÛ¼Æ×ÜÌìÊı£¬µ±Í¼Êé×´Ì¬Îª½è³ö/¹ÒÊ§Ê±,¸³ÖµÎª9999
-
+    private String bookName; //å›¾ä¹¦åç§°
+    private int price; //å›¾ä¹¦ä»·æ ¼
+    private BookStatusEnum status = BookStatusEnum.BOOK_IDLE; //å›¾ä¹¦çŠ¶æ€,åˆå§‹ä¸ºç©ºé—²çŠ¶æ€
+    private String userName; //å€Ÿä¹¦äººï¼Œå½“å›¾ä¹¦çŠ¶æ€ä¸ºç©ºé—²/æŠ¥åºŸæ—¶ï¼Œèµ‹å€¼ä¸ºç©ºå­—ç¬¦ä¸²
+    private int borrowDays; //æœ¬æ¬¡è¢«é¢„å€Ÿå¤©æ•°ï¼Œå½“å›¾ä¹¦çŠ¶æ€ä¸ºç©ºé—²/æŠ¥åºŸæ—¶,èµ‹å€¼ä¸º0
+    private int totalDays; //å›¾ä¹¦è¢«å€Ÿé˜…ç´¯è®¡æ€»å¤©æ•°ï¼Œå½“å›¾ä¹¦çŠ¶æ€ä¸ºå€Ÿå‡º/æŒ‚å¤±æ—¶,èµ‹å€¼ä¸º9999
+    private int rent;
+    private int actualRent;
+    
     public BookInfo() {
     }
 
@@ -41,6 +43,16 @@ public class BookInfo {
     public int getBorrowDays() {
         return borrowDays;
     }
+    
+    
+    public int getRent() {
+        return rent;
+    }
+
+    public int getActualRent() {
+        return actualRent;
+    }
+
 
     public BookStatusEnum getStatus() {
         return status;
@@ -60,6 +72,48 @@ public class BookInfo {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+    public void setRent(int days) {
+      	if(price>=100){
+    		if(totalDays+days <=90)
+    			rent=5*days;
+    		else if(totalDays<90)
+    			rent=(90-totalDays)*5+(days-90+totalDays)*3;
+    		else
+    			rent=days*3;
+    	}
+    	else if(price>=50){
+    		if(totalDays+days <=90)
+    			rent=3*days;
+    		else if(totalDays<90)
+    			rent=(90-totalDays)*3+(days-90+totalDays)*2;
+    		else
+    			rent=days*2;
+    	}
+    	else{
+    		rent=days;
+    	}
+    }
+    public void setActualRent(int days) {
+     	if(price>=100){
+    		if(totalDays+days <=90)
+    			actualRent=5*days;
+    		else if(totalDays<90)
+    			actualRent=(90-totalDays)*5+(days-90+totalDays)*3;
+    		else
+    			actualRent=days*3;
+    	}
+    	else if(price>=50){
+    		if(totalDays+days <=90)
+    			actualRent=3*days;
+    		else if(totalDays<90)
+    			actualRent=(90-totalDays)*3+(days-90+totalDays)*2;
+    		else
+    			actualRent=days*2;
+    	}
+    	else{
+    		actualRent=days;
+    	}
     }
 
     public void setBorrowDays(int borrowDays) {
