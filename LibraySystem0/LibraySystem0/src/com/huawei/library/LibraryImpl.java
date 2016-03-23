@@ -1,12 +1,9 @@
 package com.huawei.library;
 
-import java.awt.print.Book;
 import java.util.*;
 
 import com.huawei.exam.BookStatusEnum;
 import com.huawei.exam.ReturnCodeEnum;
-
-import sun.org.mozilla.javascript.internal.ast.NewExpression;
 
 /**
  * <p>Title: 待考生实现类</p>
@@ -51,11 +48,13 @@ public class LibraryImpl {
     	userMap=new HashMap<String, UserInfo>();
     	bookMap=new HashMap<String, BookInfo>();
     	//将用户存入内存
-    	for(int i=0;i<users.length;i++){
+    	for(int i=0;i<users.length;i++)
+    	{
     		userMap.put(users[i].getUserName(), users[i]);
     	}
     	//将书本存入内存
-    	for(int i=0;i<books.length;i++){
+    	for(int i=0;i<books.length;i++)
+    	{
     		bookMap.put(books[i].getBookName(), books[i]);
     	}
     	currentUser = null;
@@ -73,7 +72,8 @@ public class LibraryImpl {
      */
     public OpResult opLogin(String userName, String password) {
     	
-    	if(userMap.containsKey(userName) && userMap.get(userName).getPassword().equals(password)){
+    	if(userMap.containsKey(userName) && userMap.get(userName).getPassword().equals(password))
+    	{
     		currentUser=userMap.get(userName);
     		return OpResult.createOpResult(ReturnCodeEnum.E002);
     	}
@@ -90,7 +90,8 @@ public class LibraryImpl {
      *
      * @return OpResult：处理结果，通过OpResult的三个createOpResult方法生成需要的OpResult对象
      */
-    public OpResult opQueryBook(String bookName) {
+    public OpResult opQueryBook(String bookName)
+    {
     	
     	if(!bookMap.containsKey(bookName))
     	{	//E003:查询图书失败
@@ -179,7 +180,7 @@ public class LibraryImpl {
     	//UserInfo user=currentUser;
     	BookInfo book=bookMap.get(bookName);
     	if(currentUser.getBookNum()>=3 ||
-    			currentUser.getSumFee()+book.getPrice() >300 ||
+    			this.calculateSumFee(currentUser)+book.getPrice() >300 ||
     			currentUser.getCredit()<=currentUser.getBookNum())
     	{
     		//1.每个用户最多可以借3本，2.且借书的原价总额不能大于300元。
@@ -187,9 +188,10 @@ public class LibraryImpl {
     		return OpResult.createOpResult(ReturnCodeEnum.E005);
     	}
     	//计算租金
-    	book.setRent(days);
+    	int rent  = this.calculateRent(days, book);
+    	//book.setRent(days);
     	//int rent=book.getRent();
-    	if(currentUser.getBalance()<book.getRent()) 
+    	if(currentUser.getBalance()<rent) 
     	{//4.余额不足时不能借书
     		return OpResult.createOpResult(ReturnCodeEnum.E005);
     	}
@@ -202,15 +204,72 @@ public class LibraryImpl {
     	book.setStatus(BookStatusEnum.BOOK_BORROWED);
     	book.setUserName(currentUser.getUserName());
     	book.setBorrowDays(days);
-    	currentUser.setBalance(currentUser.getBalance()-book.getRent());
+    	currentUser.setBalance(currentUser.getBalance()-rent);
     	currentUser.setBookNum(currentUser.getBookNum()+1);
     	String borrowedBooks[] = currentUser.getBooks();
     	borrowedBooks[currentUser.getBookNum()-1]=bookName;
     	currentUser.setBooks(borrowedBooks);
-    	currentUser.setSumFee(currentUser.getSumFee()+book.getPrice());
         return OpResult.createOpResult(ReturnCodeEnum.E006);
     }
-
+    
+    public int calculateSumFee(UserInfo userInfo)
+    { 
+    	int sumFee = 0;
+    	String[] books = userInfo.getBooks();
+    	for (String bookName : books) {
+			if(bookMap.containsKey(bookName)){
+				sumFee+=bookMap.get(bookName).getPrice();
+			}
+		}
+    	return sumFee;
+    }
+    
+    
+    public int calculateRent(int days,BookInfo book)
+    { 
+    	int rent = 0;
+    	//书的价格大于100
+    	if(book.getPrice()>=100)
+    	{   //
+    		if(book.getTotalDays()+days <=90)
+    		{
+    			rent=5*days;
+    		}
+    		else if(book.getTotalDays()<90)
+    		{
+    			rent=(90-book.getTotalDays())*5+(days-90+book.getTotalDays())*3;
+    		}
+    		else
+    		{
+    			rent=days*3;
+    		}
+    	}
+    	//书的价格小于100,大于50
+    	else if(book.getPrice()>=50)
+    	{
+    		if(book.getTotalDays()+days <=90)
+    		{
+    			rent=3*days;
+    		}
+    		else if(book.getTotalDays()<90)
+    		{
+    			rent=(90-book.getTotalDays())*3+(days-90+book.getTotalDays())*2;
+    		}
+    		else
+    		{
+    			rent=days*2;
+    		}
+    	}
+    	//书的价格小于50
+    	else
+    	{
+    		rent=days;
+    	}
+    	return rent;
+    }
+    
+    
+    
     /**
      * 考生需要实现的接口
      * return命令接口，实现还书功能
@@ -250,9 +309,8 @@ public class LibraryImpl {
     	}
     	else if(days<book.getBorrowDays())
     	{  //实际借书天数小于预借天数,返回部分rent
-    		book.setActualRent(days);
-    		int actualRent=book.getActualRent();
-    		int rent=book.getRent();
+    		int actualRent = this.calculateRent(days, book);
+    		int rent  = this.calculateRent(book.getBorrowDays(), book);
     		user.setBalance(user.getBalance()+rent-actualRent);
     	}
     	book.setBorrowDays(0);
@@ -261,19 +319,20 @@ public class LibraryImpl {
     	
     	
     	//删除归还的书籍
-    	String books[]=user.getBooks();  	
-    	String newbooks[] = new String[3];
-    	for (int i =0,j = 0;i<books.length;i++) {
-			if(bookName!=books[i]){
-				newbooks[j]=books[i];
+    	String [] books = user.getBooks();  	
+    	String [] newbooks = new String[3];
+    	for (int i = 0,j = 0;i < books.length;i++) {
+			if(bookName != books[i]){
+				newbooks[j] = books[i];
 				j++;
 			}
 			
 		}   	
     	user.setBooks(newbooks);
-    	user.setBookNum(user.getBookNum()-1);
-    	user.setSumFee(user.getSumFee()-book.getPrice());
+    	user.setBookNum(user.getBookNum() - 1);
+
     		
         return OpResult.createOpResult(ReturnCodeEnum.E008);
     }
+    
 }

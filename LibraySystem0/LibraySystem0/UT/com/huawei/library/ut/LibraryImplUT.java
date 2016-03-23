@@ -43,18 +43,17 @@ public class LibraryImplUT
     	UserInfo[] users=new UserInfo[3];
     	BookInfo[] books=new BookInfo[3];
     	
-    	for (int i = 0; i < users.length; i++) {
-			users[i]=new UserInfo("admin","admin", 0);
-			users[i]=new UserInfo("user1","xxxxxx", 300);
-			users[i]=new UserInfo("user2","yyyyyy", 200);
-		}
     	
-    	for (int i = 0; i < books.length; i++) {
-    		books[i]=new BookInfo("bookar1", 100);
-    		books[i]=new BookInfo("bookaq2", 60);
-    		books[i]=new BookInfo("bookbp1",50);
-		}
+			users[0]=new UserInfo("admin","admin", 0);
+			users[1]=new UserInfo("user1","xxxxxx", 300);
+			users[2]=new UserInfo("user2","yyyyyy", 200);
+		
     	
+    	
+    		books[0]=new BookInfo("bookar1", 100);
+    		books[1]=new BookInfo("bookaq2", 60);
+    		books[2]=new BookInfo("bookbp1",50);
+		
     	OpResult actual = libraryImpl.opInit(users,books);        
     	OpResult expected = OpResult.createOpResult(ReturnCodeEnum.E000);
         Assert.assertNotNull(actual);
@@ -186,6 +185,12 @@ public class LibraryImplUT
 		books[1]=new BookInfo("bookaq2", 60);
 		books[2]=new BookInfo("bookbp1",50);
 		
+		users[1].setBookNum(3);
+		users[1].setBooks(new String[]{"bookar1","bookaq2","bookbp1"});
+		users[1].setCredit(5);
+		//users[1].setSumFee(0);
+		
+		
 		libraryImpl.opInit(users, books);
     	libraryImpl.opLogin("user1","xxxxxx");
     	//查询失败   用户不存在
@@ -200,14 +205,147 @@ public class LibraryImplUT
     	Assert.assertNotNull(actual1);
     	Assert.assertEquals("", expected1.toString(), actual1.toString());
     	
+    	//查询成功
+    	OpResult actual2 = libraryImpl.opQueryUser("user1");   
+    	OpResult expected2 = OpResult.createOpResult(users[1]);
+    	Assert.assertNotNull(actual2);
+    	Assert.assertEquals("", expected2.toString(), actual2.toString());
+    	
+    }
+    //借书
+    @Test
+    public void testOpBorrowBook1()
+    {
+    	UserInfo[] users=new UserInfo[3];
+    	BookInfo[] books=new BookInfo[3];
+    	
+    	users[0]=new UserInfo("admin","admin", 0);
+		users[1]=new UserInfo("user1","xxxxxx", 300);
+		users[2]=new UserInfo("user2","yyyyyy", 200);
+	
+	
+	
+		books[0]=new BookInfo("bookar1", 100);
+		books[1]=new BookInfo("bookdg6 ", 200);
+		books[2]=new BookInfo("bookdh5 ",100);
+		
+		/*users[1].setBookNum(3);
+		users[1].setBooks(new String[]{"bookar1","bookaq2","bookbp1"});
+		users[1].setCredit(5);
+		users[1].setSumFee(0);*/
+		
+		
+		libraryImpl.opInit(users, books);
+    	libraryImpl.opLogin("user1","xxxxxx");
+    	//由于图书原因不能借书
+    	OpResult actual = libraryImpl.opBorrowBook("bookar111", 20);   
+    	OpResult expected = OpResult.createOpResult(ReturnCodeEnum.E005);
+    	Assert.assertNotNull(actual);
+    	Assert.assertEquals("", expected.toString(), actual.toString());
+    	//借书成功
+       // libraryImpl.opBorrowBook("bookaq2", 20); 
+    	OpResult actual1 = libraryImpl.opBorrowBook("bookar1", 20); 
+    	OpResult expected1 = OpResult.createOpResult(ReturnCodeEnum.E006);
+    	Assert.assertNotNull(actual1);
+    	Assert.assertEquals("", expected1.toString(), actual1.toString());
+    	//借书失败   由于图书不空闲
+    	// libraryImpl.opBorrowBook("bookaq2", 20); 
+    	OpResult actual2 = libraryImpl.opBorrowBook("bookar1", 20); 
+    	OpResult expected2 = OpResult.createOpResult(ReturnCodeEnum.E005);
+    	Assert.assertNotNull(actual2);
+    	Assert.assertEquals("", expected2.toString(), actual2.toString());
+    	//借书失败   由于借书的原价总额不能大于300元 
+    	libraryImpl.opBorrowBook("bookdg6", 20);
+    	OpResult actual3 = libraryImpl.opBorrowBook("bookdh5", 20); 
+    	OpResult expected3 = OpResult.createOpResult(ReturnCodeEnum.E005);
+    	Assert.assertNotNull(actual3);
+    	Assert.assertEquals("", expected3.toString(), actual3.toString());
+    	 	
+    }
+    //借书
+    @Test
+    public void testOpBorrowBook2()
+    {
+    	//借书失败   由于用户未登录
+    	UserInfo[] users=new UserInfo[3];
+    	BookInfo[] books=new BookInfo[3];
+    	
+    	users[0]=new UserInfo("admin","admin", 0);
+		users[1]=new UserInfo("user1","xxxxxx", 300);
+		users[2]=new UserInfo("user2","yyyyyy", 200);
+	
+		books[0]=new BookInfo("bookar1", 100);
+		books[1]=new BookInfo("bookaq2", 60);
+		books[2]=new BookInfo("bookbp1",50);
+		
+		libraryImpl.opInit(users, books);
+		
+    	OpResult actual3 = libraryImpl.opBorrowBook("bookar1", 20); 
+    	OpResult expected3 = OpResult.createOpResult(ReturnCodeEnum.E005);
+    	Assert.assertNotNull(actual3);
+    	Assert.assertEquals("", expected3.toString(), actual3.toString());
     }
     
+    //借书
     @Test
-    public void testOpBorrowBook()
+    public void testOpBorrowBook3()
     {
-        //TODO:
-        //fail("Not yet implemented");
+    	//借书失败    由于每个用户最多可以借3本
+    	UserInfo[] users=new UserInfo[3];
+    	BookInfo[] books=new BookInfo[3];
+    	
+    	users[0]=new UserInfo("admin","admin", 0);
+    	users[1]=new UserInfo("user1","xxxxxx", 300);
+    	users[2]=new UserInfo("user2","yyyyyy", 200);
+    	
+    	books[0]=new BookInfo("bookar1", 100);
+    	books[1]=new BookInfo("bookaq2", 60);
+    	books[2]=new BookInfo("bookbp1",50);
+    	
+    	libraryImpl.opInit(users, books);
+    	libraryImpl.opLogin("user1","xxxxxx");
+    	
+    	users[1].setCredit(1);
+    	//借书失败    信用额度大于已借图书数量时方可借书
+    	libraryImpl.opBorrowBook("bookaq2", 20); 
+    	OpResult actual5 = libraryImpl.opBorrowBook("bookar1", 20); 
+    	
+    	OpResult expected5 = OpResult.createOpResult(ReturnCodeEnum.E005);
+    	Assert.assertNotNull(actual5);
+    	Assert.assertEquals("", expected5.toString(), actual5.toString());
     }
+    
+    //借书
+    @Test
+    public void testOpBorrowBook4()
+    {
+    	//借书失败    由于每个用户最多可以借3本
+    	UserInfo[] users=new UserInfo[3];
+    	BookInfo[] books=new BookInfo[3];
+    	
+    	users[0]=new UserInfo("admin","admin", 0);
+    	users[1]=new UserInfo("user1","xxxxxx", 300);
+    	users[2]=new UserInfo("user2","yyyyyy", 200);
+    	
+    	books[0]=new BookInfo("bookar1", 100);
+    	books[1]=new BookInfo("bookaq2", 60);
+    	books[2]=new BookInfo("bookbp1",50);
+    	
+    	libraryImpl.opInit(users, books);
+    	libraryImpl.opLogin("user1","xxxxxx");
+    	
+    	libraryImpl.opBorrowBook("bookar1", 20);
+    	libraryImpl.opBorrowBook("bookaq2", 20);
+    	libraryImpl.opBorrowBook("bookaq2", 20);
+    	OpResult actual4 = libraryImpl.opBorrowBook("bookar1", 20); 
+    	OpResult expected4 = OpResult.createOpResult(ReturnCodeEnum.E005);
+    	Assert.assertNotNull(actual4);
+    	Assert.assertEquals("", expected4.toString(), actual4.toString());
+    }
+    
+    
+    
+    
     
     @Test
     public void testOpReturnBook()

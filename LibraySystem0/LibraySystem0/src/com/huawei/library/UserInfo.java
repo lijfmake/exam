@@ -17,9 +17,8 @@ public class UserInfo {
     private String password; //密码
     private int balance; //余额
     private int credit = 5; //信用值初始为5
-    private int bookNum=0; //借书的数量
+    private int bookNum; //借书的数量
     private String books[] = new String[3]; //借书的书名,最多借3本
-    private int sumFee=0; //借书的原价总额
 
     public UserInfo() {
     }
@@ -53,9 +52,6 @@ public class UserInfo {
     public int getCredit() {
         return credit;
     }
-    public int getSumFee() {
-        return sumFee;
-    }
 
     public void setBalance(int balance) {
         this.balance = balance;
@@ -79,8 +75,5 @@ public class UserInfo {
 
     public void setCredit(int credit) {
         this.credit = credit;
-    }
-    public void setSumFee(int sumFee) {
-        this.sumFee = sumFee;
     }
 }
