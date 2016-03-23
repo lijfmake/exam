@@ -1,7 +1,7 @@
 package com.huawei.library;
 
 /**
- * <p>Title: è€ƒç”Ÿå¯ä»¥æ ¹æ®è‡ªå·±çš„éœ€æ±‚åœ¨æœ¬ç±»ä¸­å¢åŠ æ–¹æ³•å’Œå˜é‡ï¼Œä½†ä¸èƒ½ä¿®æ”¹å·²æœ‰æ–¹æ³•ä¸å˜é‡ </p>
+ * <p>Title: ¿¼Éú¿ÉÒÔ¸ù¾İ×Ô¼ºµÄĞèÇóÔÚ±¾ÀàÖĞÔö¼Ó·½·¨ºÍ±äÁ¿£¬µ«²»ÄÜĞŞ¸ÄÒÑÓĞ·½·¨Óë±äÁ¿ </p>
  *
  * <p>Description: </p>
  *
@@ -13,13 +13,13 @@ package com.huawei.library;
  * @version 1.0
  */
 public class UserInfo {
-    private String userName; //ç”¨æˆ·å
-    private String password; //å¯†ç 
-    private int balance; //ä½™é¢
-    private int credit = 5; //ä¿¡ç”¨å€¼åˆå§‹ä¸º5
-    private int bookNum=0; //å€Ÿä¹¦çš„æ•°é‡
-    private String books[] = new String[3]; //å€Ÿä¹¦çš„ä¹¦å,æœ€å¤šå€Ÿ3æœ¬
-    private int sumFee=0; //å€Ÿä¹¦çš„åŸä»·æ€»é¢
+    private String userName; //ÓÃ»§Ãû
+    private String password; //ÃÜÂë
+    private int balance; //Óà¶î
+    private int credit = 5; //ĞÅÓÃÖµ³õÊ¼Îª5
+    private int bookNum=0; //½èÊéµÄÊıÁ¿
+    private String books[] = new String[3]; //½èÊéµÄÊéÃû,×î¶à½è3±¾
+    private int sumFee=0; //½èÊéµÄÔ­¼Û×Ü¶î
 
     public UserInfo() {
     }

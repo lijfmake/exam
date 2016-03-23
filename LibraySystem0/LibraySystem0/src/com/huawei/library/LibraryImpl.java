@@ -1,13 +1,16 @@
 package com.huawei.library;
 
+import java.awt.print.Book;
 import java.util.*;
 
 import com.huawei.exam.BookStatusEnum;
 import com.huawei.exam.ReturnCodeEnum;
 
+import sun.org.mozilla.javascript.internal.ast.NewExpression;
+
 /**
- * <p>Title: å¾…è€ƒç”Ÿå®ç°ç±»</p>
- * å„æ–¹æ³•æŒ‰è¦æ±‚è¿”å›ï¼Œç¨‹åºåº“ä¼šç»„è£…æŠ¥æ–‡è¾“å‡º
+ * <p>Title: ´ı¿¼ÉúÊµÏÖÀà</p>
+ * ¸÷·½·¨°´ÒªÇó·µ»Ø£¬³ÌĞò¿â»á×é×°±¨ÎÄÊä³ö
  *
  * <p>Description: </p>
  *
@@ -21,265 +24,232 @@ import com.huawei.exam.ReturnCodeEnum;
 public class LibraryImpl {
 	
     /**
-     * å®šä¹‰å…¨å±€å˜é‡
+     * ¶¨ÒåÈ«¾Ö±äÁ¿
      *
     */
 	
-	Map<String, UserInfo> mapIdtoUser;
-	Map<String, BookInfo> mapIdtoBook;
-	String currentUserName;
+	Map<String, UserInfo> userMap;
+	Map<String, BookInfo> bookMap;
+	UserInfo currentUser;
 
-    // å¿…é¡»æä¾›æ— å‚æ•°æ„é€ å‡½æ•°ï¼Œè€ƒç”Ÿå¯åœ¨å‡½æ•°ä½“ä¸­æ ¹æ®éœ€è¦å¢åŠ åˆå§‹åŒ–ä»£ç 
-    // ç¨‹åºåº“ä¸­ä¼šä¸”åªä¼šç”Ÿæˆä¸€ä¸ªLibraryImplå®ä¾‹ï¼Œå¹¶åœ¨æ•´ä¸ªè¿›ç¨‹ç”Ÿå‘½å‘¨æœŸä¸­ä¸€ç›´ä½¿ç”¨è¿™ä¸ªå®ä¾‹
+    // ±ØĞëÌá¹©ÎŞ²ÎÊı¹¹Ôìº¯Êı£¬¿¼Éú¿ÉÔÚº¯ÊıÌåÖĞ¸ù¾İĞèÒªÔö¼Ó³õÊ¼»¯´úÂë
+    // ³ÌĞò¿âÖĞ»áÇÒÖ»»áÉú³ÉÒ»¸öLibraryImplÊµÀı£¬²¢ÔÚÕû¸ö½ø³ÌÉúÃüÖÜÆÚÖĞÒ»Ö±Ê¹ÓÃÕâ¸öÊµÀı
     public LibraryImpl() {
     }
 
     /**
-     * è€ƒç”Ÿéœ€è¦å®ç°çš„æ¥å£
-     * initialå‘½ä»¤æ¥å£ï¼Œå®ç°ç³»ç»Ÿåˆå§‹åŒ–åŠŸèƒ½
-     * ç¨‹åºåº“ä¸­å·²å®ç°äº†æ–‡ä»¶çš„è¯»å–ï¼Œè¯»å–åçš„ç»“æœå½“å‚æ•°ä¼ å…¥æœ¬å‡½æ•°
+     * ¿¼ÉúĞèÒªÊµÏÖµÄ½Ó¿Ú
+     * initialÃüÁî½Ó¿Ú£¬ÊµÏÖÏµÍ³³õÊ¼»¯¹¦ÄÜ
+     * ³ÌĞò¿âÖĞÒÑÊµÏÖÁËÎÄ¼şµÄ¶ÁÈ¡£¬¶ÁÈ¡ºóµÄ½á¹ûµ±²ÎÊı´«Èë±¾º¯Êı
      *
-     * @param users UserInfo[]ï¼šæ–‡ä»¶è¯»å–çš„ç”¨æˆ·ä¿¡æ¯
-     * @param books BookInfo[]ï¼šæ–‡ä»¶è¯»å–çš„å›¾ä¹¦ä¿¡æ¯
+     * @param users UserInfo[]£ºÎÄ¼ş¶ÁÈ¡µÄÓÃ»§ĞÅÏ¢
+     * @param books BookInfo[]£ºÎÄ¼ş¶ÁÈ¡µÄÍ¼ÊéĞÅÏ¢
      *
-     * @return OpResultï¼šå¤„ç†ç»“æœï¼Œé€šè¿‡OpResultçš„ä¸‰ä¸ªcreateOpResultæ–¹æ³•ç”Ÿæˆéœ€è¦çš„OpResultå¯¹è±¡
+     * @return OpResult£º´¦Àí½á¹û£¬Í¨¹ıOpResultµÄÈı¸öcreateOpResult·½·¨Éú³ÉĞèÒªµÄOpResult¶ÔÏó
      */
     public OpResult opInit(UserInfo[] users, BookInfo[] books) {
-    	mapIdtoUser=new HashMap<String, UserInfo>();
-    	mapIdtoBook=new HashMap<String, BookInfo>();
+    	userMap=new HashMap<String, UserInfo>();
+    	bookMap=new HashMap<String, BookInfo>();
+    	//½«ÓÃ»§´æÈëÄÚ´æ
     	for(int i=0;i<users.length;i++){
-    		mapIdtoUser.put(users[i].getUserName(), users[i]);
+    		userMap.put(users[i].getUserName(), users[i]);
     	}
+    	//½«Êé±¾´æÈëÄÚ´æ
     	for(int i=0;i<books.length;i++){
-    		mapIdtoBook.put(books[i].getBookName(), books[i]);
+    		bookMap.put(books[i].getBookName(), books[i]);
     	}
-    	currentUserName="0";
+    	currentUser = null;
         return OpResult.createOpResult(ReturnCodeEnum.E000);
     }
 
     /**
-     * è€ƒç”Ÿéœ€è¦å®ç°çš„æ¥å£
-     * loginå‘½ä»¤æ¥å£ï¼Œå®ç°ç”¨æˆ·ç™»å½•åŠŸèƒ½
+     * ¿¼ÉúĞèÒªÊµÏÖµÄ½Ó¿Ú
+     * loginÃüÁî½Ó¿Ú£¬ÊµÏÖÓÃ»§µÇÂ¼¹¦ÄÜ
      *
-     * @param user Stringï¼šç”¨æˆ·å
-     * @param password Stringï¼šå¯†ç 
+     * @param user String£ºÓÃ»§Ãû
+     * @param password String£ºÃÜÂë
      *
-     * @return OpResultï¼šå¤„ç†ç»“æœï¼Œé€šè¿‡OpResultçš„ä¸‰ä¸ªcreateOpResultæ–¹æ³•ç”Ÿæˆéœ€è¦çš„OpResultå¯¹è±¡
+     * @return OpResult£º´¦Àí½á¹û£¬Í¨¹ıOpResultµÄÈı¸öcreateOpResult·½·¨Éú³ÉĞèÒªµÄOpResult¶ÔÏó
      */
     public OpResult opLogin(String userName, String password) {
     	
-    	if(mapIdtoUser.containsKey(userName) && mapIdtoUser.get(userName).getPassword().equals(password)){
-    		currentUserName=userName;
+    	if(userMap.containsKey(userName) && userMap.get(userName).getPassword().equals(password)){
+    		currentUser=userMap.get(userName);
     		return OpResult.createOpResult(ReturnCodeEnum.E002);
     	}
-    	else
+    	else{
     		return OpResult.createOpResult(ReturnCodeEnum.E001);
-    	
+    	}
     }
 
     /**
-     * è€ƒç”Ÿéœ€è¦å®ç°çš„æ¥å£
-     * query bookå‘½ä»¤æ¥å£ï¼Œå®ç°å›¾ä¹¦æŸ¥è¯¢åŠŸèƒ½
+     * ¿¼ÉúĞèÒªÊµÏÖµÄ½Ó¿Ú
+     * query bookÃüÁî½Ó¿Ú£¬ÊµÏÖÍ¼Êé²éÑ¯¹¦ÄÜ
      *
-     * @param bookName Stringï¼šå›¾ä¹¦å
+     * @param bookName String£ºÍ¼ÊéÃû
      *
-     * @return OpResultï¼šå¤„ç†ç»“æœï¼Œé€šè¿‡OpResultçš„ä¸‰ä¸ªcreateOpResultæ–¹æ³•ç”Ÿæˆéœ€è¦çš„OpResultå¯¹è±¡
+     * @return OpResult£º´¦Àí½á¹û£¬Í¨¹ıOpResultµÄÈı¸öcreateOpResult·½·¨Éú³ÉĞèÒªµÄOpResult¶ÔÏó
      */
     public OpResult opQueryBook(String bookName) {
     	
-    	if(!mapIdtoBook.containsKey(bookName))
+    	if(!bookMap.containsKey(bookName))
+    	{	//E003:²éÑ¯Í¼ÊéÊ§°Ü
     		return OpResult.createOpResult(ReturnCodeEnum.E003);
-    	
-    	BookInfo book=mapIdtoBook.get(bookName);
-    	if(book.getStatus()==BookStatusEnum.BOOK_IDLE){
-    		//ä¹¦ç±å¤„äºç©ºé—²çŠ¶æ€
+    	}
+    	BookInfo book = bookMap.get(bookName);
+    	if(book.getStatus() == BookStatusEnum.BOOK_IDLE){
+    		//Êé¼®´¦ÓÚ¿ÕÏĞ×´Ì¬
     		book.setUserName("");
     		book.setBorrowDays(0);
     		return OpResult.createOpResult(book);
     	}
-    	else if(book.getStatus()==BookStatusEnum.BOOK_BORROWED){
-    		
-    		BookInfo displayBook=new BookInfo(book.getBookName(),book.getPrice());
-    		displayBook.setStatus(BookStatusEnum.BOOK_BORROWED);
-    		displayBook.setUserName(book.getUserName());
-    		displayBook.setBorrowDays(book.getBorrowDays());
-    		displayBook.setTotalDays(9999);
-    		return OpResult.createOpResult(displayBook);
+    	if(book.getStatus() == BookStatusEnum.BOOK_BORROWED)
+    	{
+    		//ÓÃÓÚÏÔÊ¾µÄbookÊôĞÔ
+    		BookInfo bookInfoVO = this.createBookInfoVO(book);
+    		return OpResult.createOpResult(bookInfoVO);
+    	}
+    	if(book.getStatus() == BookStatusEnum.BOOK_DISUSE)
+    	{
+    		return OpResult.createOpResult(book);
     	}
         return OpResult.createOpResult(ReturnCodeEnum.E999);
     }
 
-    /**
-     * è€ƒç”Ÿéœ€è¦å®ç°çš„æ¥å£
-     * query userå‘½ä»¤æ¥å£ï¼Œå®ç°ç”¨æˆ·æŸ¥è¯¢åŠŸèƒ½
-     *
-     * @param userName Stringï¼šç”¨æˆ·å
-     *
-     * @return OpResultï¼šå¤„ç†ç»“æœï¼Œé€šè¿‡OpResultçš„ä¸‰ä¸ªcreateOpResultæ–¹æ³•ç”Ÿæˆéœ€è¦çš„OpResultå¯¹è±¡
-     */
-    public void sortBookName(UserInfo user){
-    	if(user.getBookNum()<2)
-    		return;
-    	if(user.getBookNum()==2){
-    		
-    		String book1=user.getBooks()[0];
-    		String book2=user.getBooks()[1];
-    		if(book1.compareTo(book2)>0){
-    			String sortBooks[] = new String[3];
-    			sortBooks[0]=book2;
-    			sortBooks[1]=book1;
-    			user.setBooks(sortBooks);
-    		}
-    	}
-    	if(user.getBookNum()==3){
-    		
-    		String book1=user.getBooks()[0];
-    		String book2=user.getBooks()[1];
-    		String book3=user.getBooks()[2];
-    		if(book1.compareTo(book2)<=0){
-    			
-    			if(book1.compareTo(book3)<=0 && book2.compareTo(book3)<=0)
-    				return;
-    			else if(book1.compareTo(book3)<=0 && book2.compareTo(book3)>0){
-        			String sortBooks[] = new String[3];
-        			sortBooks[0]=book1;
-        			sortBooks[1]=book3;
-        			sortBooks[2]=book2;
-        			user.setBooks(sortBooks);
-        			return;
-    			}
-    			else{
-        			String sortBooks[] = new String[3];
-        			sortBooks[0]=book3;
-        			sortBooks[1]=book1;
-        			sortBooks[2]=book2;
-        			user.setBooks(sortBooks);
-        			return;
-    			}
-    		}
-    		else{
-    			if(book1.compareTo(book3)<=0 && book2.compareTo(book3)<=0){
-        			String sortBooks[] = new String[3];
-        			sortBooks[0]=book2;
-        			sortBooks[1]=book1;
-        			sortBooks[2]=book3;
-        			user.setBooks(sortBooks);
-        			return;
-    			}
-    			else if(book1.compareTo(book3)>0 && book2.compareTo(book3)<=0){
-        			String sortBooks[] = new String[3];
-        			sortBooks[0]=book2;
-        			sortBooks[1]=book3;
-        			sortBooks[2]=book1;
-        			user.setBooks(sortBooks);
-        			return;
-    			}
-    			else{
-        			String sortBooks[] = new String[3];
-        			sortBooks[0]=book3;
-        			sortBooks[1]=book2;
-        			sortBooks[2]=book1;
-        			user.setBooks(sortBooks);
-        			return;
-    			}
-    			
-    		}
-    }
-}
+	public BookInfo createBookInfoVO(BookInfo book) {
+		BookInfo bookInfoVO=new BookInfo(book.getBookName(),book.getPrice());
+		bookInfoVO.setStatus(BookStatusEnum.BOOK_BORROWED);
+		bookInfoVO.setUserName(book.getUserName());
+		bookInfoVO.setBorrowDays(book.getBorrowDays());
+		bookInfoVO.setTotalDays(9999);
+		return bookInfoVO;
+	}
+
+	 /**
+	  * 
+	  * @param user
+	  */
+
     
     public OpResult opQueryUser(String userName) {
-    	if(!mapIdtoUser.containsKey(userName))   //ç”¨æˆ·ä¸å­˜åœ¨
+    	if(!userMap.containsKey(userName))
+    	{ //ÓÃ»§²»´æÔÚ
     		return OpResult.createOpResult(ReturnCodeEnum.E004);
+    	}
+    	//¹ÜÀíÔ±ÌØÈ¨
     	
-    	if(!userName.equals(currentUserName))  //ç”¨æˆ·æŸ¥è¯¢çš„ä¸æ˜¯è‡ªå·±çš„çŠ¶æ€
+    	if(currentUser.getUserName().equals("admin")){
+    		UserInfo user = userMap.get(userName);
+    		Arrays.sort(user.getBooks());
+        	//sortBookName(user);
+        	return OpResult.createOpResult(user);
+    	}
+    	
+    	if(!userName.equals(currentUser.getUserName()))
+    	{  //ÓÃ»§²éÑ¯µÄ²»ÊÇ×Ô¼ºµÄ×´Ì¬
     		return OpResult.createOpResult(ReturnCodeEnum.E004);
-    	
-    	UserInfo user=mapIdtoUser.get(userName);
-    	sortBookName(user);
-    	return OpResult.createOpResult(user);
+    	}
+    	//UserInfo user=userMap.get(userName);
+    	Arrays.sort(currentUser.getBooks());
+    	//sortBookName(user);
+    	return OpResult.createOpResult(currentUser);
     }
 
     /**
-     * è€ƒç”Ÿéœ€è¦å®ç°çš„æ¥å£
-     * borrowå‘½ä»¤æ¥å£ï¼Œå®ç°å€Ÿä¹¦åŠŸèƒ½
+     * ¿¼ÉúĞèÒªÊµÏÖµÄ½Ó¿Ú
+     * borrowÃüÁî½Ó¿Ú£¬ÊµÏÖ½èÊé¹¦ÄÜ
      *
-     * @param bookName Stringï¼šå›¾ä¹¦å
-     * @param days intï¼šé¢„å€Ÿå¤©æ•°
+     * @param bookName String£ºÍ¼ÊéÃû
+     * @param days int£ºÔ¤½èÌìÊı
      *
-     * @return OpResultï¼šå¤„ç†ç»“æœï¼Œé€šè¿‡OpResultçš„ä¸‰ä¸ªcreateOpResultæ–¹æ³•ç”Ÿæˆéœ€è¦çš„OpResultå¯¹è±¡
+     * @return OpResult£º´¦Àí½á¹û£¬Í¨¹ıOpResultµÄÈı¸öcreateOpResult·½·¨Éú³ÉĞèÒªµÄOpResult¶ÔÏó
      */
     public OpResult opBorrowBook(String bookName, int days) {
     	
     	
-    	if(!mapIdtoBook.containsKey(bookName))     //6.å›¾ä¹¦ä¸å­˜åœ¨
-    		return OpResult.createOpResult(ReturnCodeEnum.E005);
-    	
-    	//ç”±äºç”¨æˆ·åŸå› ä¸èƒ½å€Ÿä¹¦(1-4)
-    	if(currentUserName.equals("0"))   //ç”¨æˆ·æœªç™»å½•
-    		 return OpResult.createOpResult(ReturnCodeEnum.E005);
-    	UserInfo user=mapIdtoUser.get(currentUserName);
-    	BookInfo book=mapIdtoBook.get(bookName);
-    	if(user.getBookNum()>=3 || user.getSumFee()+book.getPrice() >300 ||user.getCredit()<=user.getBookNum()){
-    		//1.æ¯ä¸ªç”¨æˆ·æœ€å¤šå¯ä»¥å€Ÿ3æœ¬ï¼Œ2.ä¸”å€Ÿä¹¦çš„åŸä»·æ€»é¢ä¸èƒ½å¤§äº300å…ƒã€‚
-    		//3.ä¿¡ç”¨é¢åº¦å¤§äºå·²å€Ÿå›¾ä¹¦æ•°é‡æ—¶æ–¹å¯å€Ÿä¹¦
+    	if(!bookMap.containsKey(bookName))
+    	{//6.Í¼Êé²»´æÔÚ
     		return OpResult.createOpResult(ReturnCodeEnum.E005);
     	}
-    	//è®¡ç®—ç§Ÿé‡‘
+    	//ÓÉÓÚÓÃ»§Ô­Òò²»ÄÜ½èÊé(1-4)
+    	if(currentUser==null)
+    	{//ÓÃ»§Î´µÇÂ¼
+    		 return OpResult.createOpResult(ReturnCodeEnum.E005);
+    	}
+    	//UserInfo user=currentUser;
+    	BookInfo book=bookMap.get(bookName);
+    	if(currentUser.getBookNum()>=3 ||
+    			currentUser.getSumFee()+book.getPrice() >300 ||
+    			currentUser.getCredit()<=currentUser.getBookNum())
+    	{
+    		//1.Ã¿¸öÓÃ»§×î¶à¿ÉÒÔ½è3±¾£¬2.ÇÒ½èÊéµÄÔ­¼Û×Ü¶î²»ÄÜ´óÓÚ300Ôª¡£
+    		//3.ĞÅÓÃ¶î¶È´óÓÚÒÑ½èÍ¼ÊéÊıÁ¿Ê±·½¿É½èÊé
+    		return OpResult.createOpResult(ReturnCodeEnum.E005);
+    	}
+    	//¼ÆËã×â½ğ
     	book.setRent(days);
-    	int rent=book.getRent();
-    	
-  
-    	if(user.getBalance()<rent)   //4.ä½™é¢ä¸è¶³æ—¶ä¸èƒ½å€Ÿä¹¦
+    	//int rent=book.getRent();
+    	if(currentUser.getBalance()<book.getRent()) 
+    	{//4.Óà¶î²»×ãÊ±²»ÄÜ½èÊé
     		return OpResult.createOpResult(ReturnCodeEnum.E005);
-    	
-    	//ç”±äºå›¾ä¹¦åŸå› ä¸èƒ½å€Ÿä¹¦
-    	if(book.getStatus()!=BookStatusEnum.BOOK_IDLE)  //5.å›¾ä¹¦ä¸ç©ºé—²
+    	}
+    	//ÓÉÓÚÍ¼ÊéÔ­Òò²»ÄÜ½èÊé
+    	if(book.getStatus()!=BookStatusEnum.BOOK_IDLE)
+    	{//5.Í¼Êé²»¿ÕÏĞ
     		return OpResult.createOpResult(ReturnCodeEnum.E005);
-    	
-    	//å€Ÿä¹¦æˆåŠŸï¼Œå›¾ä¹¦å¤„äºå€Ÿå‡ºçŠ¶æ€
+    	}
+    	//½èÊé³É¹¦£¬Í¼Êé´¦ÓÚ½è³ö×´Ì¬
     	book.setStatus(BookStatusEnum.BOOK_BORROWED);
-    	book.setUserName(user.getUserName());
+    	book.setUserName(currentUser.getUserName());
     	book.setBorrowDays(days);
-    	user.setBalance(user.getBalance()-rent);
-    	user.setBookNum(user.getBookNum()+1);
-    	String borrowedBooks[] = user.getBooks();
-    	borrowedBooks[user.getBookNum()-1]=bookName;
-    	user.setBooks(borrowedBooks);
-    	user.setSumFee(user.getSumFee()+book.getPrice());
+    	currentUser.setBalance(currentUser.getBalance()-book.getRent());
+    	currentUser.setBookNum(currentUser.getBookNum()+1);
+    	String borrowedBooks[] = currentUser.getBooks();
+    	borrowedBooks[currentUser.getBookNum()-1]=bookName;
+    	currentUser.setBooks(borrowedBooks);
+    	currentUser.setSumFee(currentUser.getSumFee()+book.getPrice());
         return OpResult.createOpResult(ReturnCodeEnum.E006);
     }
 
     /**
-     * è€ƒç”Ÿéœ€è¦å®ç°çš„æ¥å£
-     * returnå‘½ä»¤æ¥å£ï¼Œå®ç°è¿˜ä¹¦åŠŸèƒ½
+     * ¿¼ÉúĞèÒªÊµÏÖµÄ½Ó¿Ú
+     * returnÃüÁî½Ó¿Ú£¬ÊµÏÖ»¹Êé¹¦ÄÜ
      *
-     * @param bookName Stringï¼šå›¾ä¹¦å
-     * @param days intï¼šå®å€Ÿå¤©æ•°
+     * @param bookName String£ºÍ¼ÊéÃû
+     * @param days int£ºÊµ½èÌìÊı
      *
-     * @return OpResultï¼šå¤„ç†ç»“æœï¼Œé€šè¿‡OpResultçš„ä¸‰ä¸ªcreateOpResultæ–¹æ³•ç”Ÿæˆéœ€è¦çš„OpResultå¯¹è±¡
+     * @return OpResult£º´¦Àí½á¹û£¬Í¨¹ıOpResultµÄÈı¸öcreateOpResult·½·¨Éú³ÉĞèÒªµÄOpResult¶ÔÏó
      */
     public OpResult opReturnBook(String bookName, int days) {
     	
     	
-    	if(currentUserName.equals("0"))   //ç”¨æˆ·æœªç™»å½•,ä¸èƒ½è¿˜ä¹¦
+    	if(currentUser==null) 
+    	{  //ÓÃ»§Î´µÇÂ¼,²»ÄÜ»¹Êé
    		 	return OpResult.createOpResult(ReturnCodeEnum.E005);
-    	if(!mapIdtoBook.containsKey(bookName))     //å›¾ä¹¦ä¸å­˜åœ¨
+    	}
+    	if(!bookMap.containsKey(bookName)) 
+    	{//Í¼Êé²»´æÔÚ
     		return OpResult.createOpResult(ReturnCodeEnum.E007);
-    	BookInfo book=mapIdtoBook.get(bookName);
-    	if(book.getStatus()!=BookStatusEnum.BOOK_BORROWED)  //å›¾ä¹¦ä¸åœ¨å€Ÿå‡ºçŠ¶æ€
+    	}
+    	BookInfo book = bookMap.get(bookName);
+    	if(book.getStatus()!=BookStatusEnum.BOOK_BORROWED)
+    	{//Í¼Êé²»ÔÚ½è³ö×´Ì¬
     		return OpResult.createOpResult(ReturnCodeEnum.E007);
-    	
+    	}
     	book.setTotalDays(book.getTotalDays()+days);
     	book.setStatus(BookStatusEnum.BOOK_IDLE);
-    	if(book.getTotalDays()>=300)            //ä¹¦ç±æ˜¯å¦æŠ¥åºŸ
+    	if(book.getTotalDays()>=300) 
+    	{//Êé¼®ÊÇ·ñ±¨·Ï
     		book.setStatus(BookStatusEnum.BOOK_DISUSE);
+    	}
     	
-    	
-    	UserInfo user=mapIdtoUser.get(book.getUserName());
-    	if(days>book.getBorrowDays()){   //å®é™…å€Ÿä¹¦å¤©æ•°å¤§äºé¢„å€Ÿå¤©æ•°,ä¿¡ç”¨-1
+    	UserInfo user=userMap.get(book.getUserName());
+    	if(days>book.getBorrowDays())
+    	{   //Êµ¼Ê½èÊéÌìÊı´óÓÚÔ¤½èÌìÊı,ĞÅÓÃ-1
     		user.setCredit(user.getCredit()-1);
     	}
-    	else if(days<book.getBorrowDays()){  //å®é™…å€Ÿä¹¦å¤©æ•°å°äºé¢„å€Ÿå¤©æ•°,è¿”å›éƒ¨åˆ†rent
+    	else if(days<book.getBorrowDays())
+    	{  //Êµ¼Ê½èÊéÌìÊıĞ¡ÓÚÔ¤½èÌìÊı,·µ»Ø²¿·Örent
     		book.setActualRent(days);
     		int actualRent=book.getActualRent();
     		int rent=book.getRent();
@@ -288,17 +258,19 @@ public class LibraryImpl {
     	book.setBorrowDays(0);
     	book.setUserName("");
     	
-    	//ä¹¦ç±å¾€å‰é¢å…¨éƒ¨ç§»åŠ¨ä¸€ä½
-    	String books[]=user.getBooks();
-    	int deletePosition=0;
-    	while(!bookName.equals(books[deletePosition]))
-    		deletePosition++;
-    	int i;
-    	for(i=deletePosition;i<user.getBookNum()-1;i++)
-    		books[deletePosition]=books[deletePosition]+1;
     	
-    	books[i]=null;
-    	user.setBooks(books);
+    	
+    	//É¾³ı¹é»¹µÄÊé¼®
+    	String books[]=user.getBooks();  	
+    	String newbooks[] = new String[3];
+    	for (int i =0,j = 0;i<books.length;i++) {
+			if(bookName!=books[i]){
+				newbooks[j]=books[i];
+				j++;
+			}
+			
+		}   	
+    	user.setBooks(newbooks);
     	user.setBookNum(user.getBookNum()-1);
     	user.setSumFee(user.getSumFee()-book.getPrice());
     		

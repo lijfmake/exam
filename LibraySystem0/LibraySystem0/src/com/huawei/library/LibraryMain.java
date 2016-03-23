@@ -6,8 +6,8 @@ import com.huawei.exam.ExamServer;
 
 /**
  *
- * <p>Title: ä¸»æ‰§è¡Œç±»</p>
- * è€ƒç”Ÿä¸å¾—ä¿®æ”¹ï¼Œäº¦æ— é¡»å…³æ³¨æ­¤æ–‡ä»¶å†…å®¹
+ * <p>Title: Ö÷Ö´ĞĞÀà</p>
+ * ¿¼Éú²»µÃĞŞ¸Ä£¬ÒàÎŞĞë¹Ø×¢´ËÎÄ¼şÄÚÈİ
  *
  * <p>Description: </p>
  *
@@ -27,9 +27,9 @@ public class LibraryMain
     public static void main(String[] args)
     {
         /**
-         * å¯åŠ¨SocketæœåŠ¡ä¾¦å¬5555ç«¯å£ï¼Œä»Socketè·å–å‘½ä»¤ï¼Œä¼šä¸¢ç»™Commandç±»çš„commandå‡½æ•°æ‰§è¡Œ
-         * Commandç±»çš„commandå‡½æ•°å·²ç»å®ç°äº†ä»Socketæ¥æ”¶åˆ°å­—ç¬¦ä¸²åçš„è§£æä¸åˆ†å‘
-         * è€ƒç”Ÿåªéœ€è¦å®ç°LibraryImplç±»çš„å„å‘½ä»¤æ¥å£å³å¯ã€‚
+         * Æô¶¯Socket·şÎñÕìÌı5555¶Ë¿Ú£¬´ÓSocket»ñÈ¡ÃüÁî£¬»á¶ª¸øCommandÀàµÄcommandº¯ÊıÖ´ĞĞ
+         * CommandÀàµÄcommandº¯ÊıÒÑ¾­ÊµÏÖÁË´ÓSocket½ÓÊÕµ½×Ö·û´®ºóµÄ½âÎöÓë·Ö·¢
+         * ¿¼ÉúÖ»ĞèÒªÊµÏÖLibraryImplÀàµÄ¸÷ÃüÁî½Ó¿Ú¼´¿É¡£
          */
         Command cmd = new ExamCommand();
         ExamServer examServer = new ExamServer(cmd);
